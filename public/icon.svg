@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af"/>
+      <stop offset="100%" style="stop-color:#0d47a1"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  
+  <!-- Brasília silhouette (simplified) -->
+  <path d="M128 380 L256 280 L384 380 L256 320 Z" fill="#ffffff" opacity="0.1"/>
+  
+  <!-- Speech bubble representing ouvidoria -->
+  <g transform="translate(106, 100)">
+    <path d="M150 0C67.2 0 0 54.2 0 121c0 40.8 24.5 77 62.5 100.2L45 280l65-35c12.3 3.3 25.4 5 39 5 82.8 0 150-54.2 150-121S232.8 0 150 0z" fill="white"/>
+    
+    <!-- Microphone icon inside bubble -->
+    <g transform="translate(110, 60)">
+      <rect x="20" y="10" width="40" height="70" rx="20" fill="#1e40af"/>
+      <path d="M0 50 v20 a60 60 0 0 0 80 0 v-20" stroke="#1e40af" stroke-width="8" fill="none"/>
+      <line x1="40" y1="100" x2="40" y2="120" stroke="#1e40af" stroke-width="8"/>
+      <line x1="20" y1="120" x2="60" y2="120" stroke="#1e40af" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- DF text -->
+  <text x="256" y="440" font-family="system-ui, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">
+    PARTICIPA DF
+  </text>
+</svg>

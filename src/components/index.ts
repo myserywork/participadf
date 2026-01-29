@@ -1,0 +1,11 @@
+export { default as Header } from './Header';
+export { default as Footer } from './Footer';
+export { default as AccessibilityPanel } from './AccessibilityPanel';
+export { default as Toast } from './Toast';
+export { default as AudioRecorder } from './AudioRecorder';
+export { default as VideoRecorder } from './VideoRecorder';
+export { default as FileUpload } from './FileUpload';
+export { default as AnexosList } from './AnexosList';
+export { default as IzaAssistente } from './IzaAssistente';
+export { default as ProtocoloSucesso } from './ProtocoloSucesso';
+export { default as InstallPrompt, useInstallPrompt } from './InstallPrompt';

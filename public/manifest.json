@@ -1,0 +1,51 @@
+{
+  "name": "Participa DF - Ouvidoria Digital",
+  "short_name": "Ouvidoria DF",
+  "description": "Plataforma de Ouvidoria Digital do Distrito Federal - Registre manifestações de forma acessível e inclusiva",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D47A1",
+  "theme_color": "#0D47A1",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["government", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nova Manifestação",
+      "short_name": "Manifestação",
+      "description": "Registrar nova manifestação",
+      "url": "/manifestacao/nova",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Consultar Protocolo",
+      "short_name": "Consultar",
+      "description": "Consultar status de manifestação",
+      "url": "/consulta",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
