@@ -14,8 +14,10 @@ import {
   MessageSquarePlus,
   Sun,
   Moon,
-  Download
+  Download,
+  ChevronRight
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import AccessibilityPanel from './AccessibilityPanel';
 import { useInstallPrompt } from './InstallPrompt';
 import { useAcessibilidadeStore } from '@/lib/store';
@@ -32,19 +34,30 @@ export default function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
+  // Bloqueia scroll quando menu mobile está aberto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   const navItems = [
     { href: '/', label: 'Início', icon: Home },
-    { href: '/manifestacao/nova', label: 'Nova Manifestação', icon: MessageSquarePlus },
+    { href: '/manifestacao/nova', label: 'Nova Manifestação', icon: MessageSquarePlus, highlight: true },
     { href: '/consulta', label: 'Consultar', icon: Search },
     { href: '/ajuda', label: 'Ajuda', icon: HelpCircle },
   ];
@@ -65,18 +78,10 @@ export default function Header() {
 
   return (
     <>
-      {/* Skip Link - Acessibilidade WCAG 2.4.1 */}
-      <a 
-        href="#main-content" 
-        className="skip-link"
-      >
-        Pular para o conteúdo principal
-      </a>
-
-      <header 
+      <header
         className={`sticky top-0 z-40 transition-all duration-300 safe-top ${
           isScrolled || !isHeroPage
-            ? 'bg-[var(--bg-elevated)] border-b border-[var(--border-primary)] shadow-sm'
+            ? 'bg-[var(--bg-elevated)]/95 backdrop-blur-md border-b border-[var(--border-primary)] shadow-sm'
             : 'bg-transparent'
         }`}
       >
@@ -85,20 +90,26 @@ export default function Header() {
             {/* Logo */}
             <Link
               href="/"
+              className="flex items-center gap-3"
               aria-label="Participa DF - Voltar para página inicial"
             >
               <Image
-                src="/favicon.png"
-                alt="Participa DF"
-                width={44}
-                height={44}
+                src="/icons/icon-72x72.svg"
+                alt=""
+                width={40}
+                height={40}
                 className="rounded-xl"
                 priority
               />
+              <span className={`font-bold text-lg hidden sm:block ${
+                isScrolled || !isHeroPage ? 'text-[var(--text-primary)]' : 'text-white'
+              }`}>
+                Participa DF
+              </span>
             </Link>
 
             {/* Navegação Desktop */}
-            <nav className="hidden md:flex items-center gap-1" aria-label="Navegação principal">
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Navegação principal">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
@@ -107,8 +118,8 @@ export default function Header() {
                     key={item.href}
                     href={item.href}
                     className={`nav-pill ${
-                      active 
-                        ? 'active' 
+                      active
+                        ? 'active'
                         : isScrolled || !isHeroPage
                           ? ''
                           : 'text-white/80 hover:text-white hover:bg-white/10'
@@ -124,11 +135,11 @@ export default function Header() {
 
             {/* Actions */}
             <div className="flex items-center gap-2">
-              {/* Install PWA Button */}
+              {/* Install PWA Button - Desktop only */}
               {isInstallable && (
                 <button
                   onClick={promptInstall}
-                  className={`btn-icon border-0 ${
+                  className={`hidden md:flex btn-icon border-0 ${
                     isScrolled || !isHeroPage
                       ? 'bg-green-100 text-green-600 hover:bg-green-200'
                       : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
@@ -173,7 +184,7 @@ export default function Header() {
               {/* CTA Button - Desktop */}
               <Link
                 href="/manifestacao/nova"
-                className="hidden md:flex btn-primary py-2.5 px-5 text-sm"
+                className="hidden lg:flex btn-primary py-2.5 px-5 text-sm"
               >
                 <MessageSquarePlus className="w-4 h-4" aria-hidden="true" />
                 <span>Nova Manifestação</span>
@@ -181,7 +192,7 @@ export default function Header() {
 
               {/* Mobile Menu Button */}
               <button
-                className={`md:hidden btn-icon border-0 ${
+                className={`lg:hidden btn-icon border-0 ${
                   isScrolled || !isHeroPage
                     ? 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]'
                     : 'bg-white/10 text-white'
@@ -201,67 +212,128 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div
-            id="mobile-menu"
-            className="md:hidden absolute left-0 right-0 top-full bg-[var(--bg-elevated)] border-b border-[var(--border-primary)] shadow-lg z-50"
-          >
-          <nav 
-            className="container mx-auto px-4 py-4 space-y-1 bg-[var(--bg-elevated)] border-t border-[var(--border-primary)]"
-            aria-label="Menu de navegação mobile"
-          >
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
-                    active 
-                      ? 'bg-[var(--brand-primary)] text-white' 
-                      : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]'
-                  }`}
-                  aria-current={active ? 'page' : undefined}
-                  tabIndex={isMobileMenuOpen ? 0 : -1}
-                >
-                  <Icon className="w-5 h-5" aria-hidden="true" />
-                  {item.label}
-                </Link>
-              );
-            })}
-            
-            {/* Mobile CTA */}
-            <Link
-              href="/manifestacao/nova"
-              className="flex items-center justify-center gap-2 w-full mt-4 btn-primary py-3"
-              tabIndex={isMobileMenuOpen ? 0 : -1}
-            >
-              <MessageSquarePlus className="w-5 h-5" aria-hidden="true" />
-              Nova Manifestação
-            </Link>
+        {/* Mobile Menu - Full Screen Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="lg:hidden fixed inset-0 bg-black/50 z-40"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
 
-            {/* Mobile Install Button */}
-            {isInstallable && (
-              <button
-                onClick={promptInstall}
-                className="flex items-center justify-center gap-2 w-full mt-2 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-                tabIndex={isMobileMenuOpen ? 0 : -1}
+              {/* Menu Panel */}
+              <motion.div
+                id="mobile-menu"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="lg:hidden fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-[var(--bg-elevated)] z-50 shadow-2xl flex flex-col"
               >
-                <Download className="w-5 h-5" aria-hidden="true" />
-                Instalar App
-              </button>
-            )}
-          </nav>
-          </div>
-        )}
+                {/* Menu Header */}
+                <div className="flex items-center justify-between p-4 border-b border-[var(--border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src="/icons/icon-72x72.svg"
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="rounded-lg"
+                    />
+                    <span className="font-bold text-[var(--text-primary)]">Menu</span>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-xl hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)]"
+                    aria-label="Fechar menu"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Navigation Links */}
+                <nav className="flex-1 overflow-y-auto p-4" aria-label="Menu de navegação mobile">
+                  <div className="space-y-1">
+                    {navItems.map((item) => {
+                      const Icon = item.icon;
+                      const active = isActive(item.href);
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`flex items-center justify-between px-4 py-4 rounded-2xl font-medium transition-all ${
+                            active
+                              ? 'bg-[var(--brand-primary)] text-white shadow-lg shadow-blue-500/20'
+                              : 'text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'
+                          }`}
+                          aria-current={active ? 'page' : undefined}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                              active ? 'bg-white/20' : 'bg-[var(--bg-tertiary)]'
+                            }`}>
+                              <Icon className="w-5 h-5" aria-hidden="true" />
+                            </div>
+                            <span>{item.label}</span>
+                          </div>
+                          <ChevronRight className={`w-5 h-5 ${active ? 'text-white/70' : 'text-[var(--text-tertiary)]'}`} />
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  {/* Divider */}
+                  <div className="my-6 border-t border-[var(--border-primary)]" />
+
+                  {/* Quick Actions */}
+                  <div className="space-y-3">
+                    {/* Install Button */}
+                    {isInstallable && (
+                      <button
+                        onClick={() => {
+                          promptInstall();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold shadow-lg shadow-green-500/20"
+                      >
+                        <Download className="w-5 h-5" aria-hidden="true" />
+                        Instalar App
+                      </button>
+                    )}
+
+                    {/* CTA Button */}
+                    <Link
+                      href="/manifestacao/nova"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold shadow-lg shadow-blue-500/20"
+                    >
+                      <MessageSquarePlus className="w-5 h-5" aria-hidden="true" />
+                      Nova Manifestação
+                    </Link>
+                  </div>
+                </nav>
+
+                {/* Footer Info */}
+                <div className="p-4 border-t border-[var(--border-primary)] bg-[var(--bg-secondary)]">
+                  <p className="text-xs text-[var(--text-tertiary)] text-center">
+                    Central de Atendimento: <strong className="text-[var(--text-secondary)]">162</strong>
+                  </p>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Accessibility Panel */}
-      <AccessibilityPanel 
-        isOpen={isA11yPanelOpen} 
-        onClose={() => setIsA11yPanelOpen(false)} 
+      <AccessibilityPanel
+        isOpen={isA11yPanelOpen}
+        onClose={() => setIsA11yPanelOpen(false)}
       />
     </>
   );
