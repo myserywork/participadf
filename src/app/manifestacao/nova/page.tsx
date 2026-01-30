@@ -170,12 +170,12 @@ function IzaRobot({ stepKey, mensagemCustomizada, compact = false }: IzaRobotPro
 
   if (compact) {
     return (
-      <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+      <div className="flex items-start gap-3 p-4 bg-[var(--brand-primary)]/10 rounded-xl border border-[var(--brand-primary)]/20">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-primary-dark)] flex items-center justify-center flex-shrink-0 shadow-md">
           <span className="text-lg">🤖</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm text-gray-700 leading-relaxed">
+          <p className="text-sm text-[var(--text-primary)] leading-relaxed">
             {mensagemCustomizada || info?.mensagem}
           </p>
         </div>
@@ -187,20 +187,20 @@ function IzaRobot({ stepKey, mensagemCustomizada, compact = false }: IzaRobotPro
     <div className="flex items-start gap-4">
       {/* Avatar da IZA */}
       <div className="flex-shrink-0">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg border-2 border-white">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-primary-dark)] flex items-center justify-center shadow-lg border-2 border-[var(--bg-primary)]">
           <span className="text-3xl">🤖</span>
         </div>
         <div className="text-center mt-1">
-          <span className="text-xs font-bold text-blue-600">IZA</span>
+          <span className="text-xs font-bold text-[var(--brand-primary)]">IZA</span>
         </div>
       </div>
 
       {/* Balão de fala */}
       <div className="flex-1 relative">
-        <div className="absolute left-0 top-4 -ml-2 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-blue-50 border-b-8 border-b-transparent" />
-        <div className="bg-blue-50 rounded-2xl rounded-tl-sm p-4 border border-blue-100 shadow-sm">
-          <p className="font-bold text-blue-800 mb-1 text-sm">{info?.titulo}</p>
-          <p className="text-gray-700 text-sm leading-relaxed">
+        <div className="absolute left-0 top-4 -ml-2 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-[var(--brand-primary)]/10 border-b-8 border-b-transparent" />
+        <div className="bg-[var(--brand-primary)]/10 rounded-2xl rounded-tl-sm p-4 border border-[var(--brand-primary)]/20 shadow-sm">
+          <p className="font-bold text-[var(--brand-primary)] mb-1 text-sm">{info?.titulo}</p>
+          <p className="text-[var(--text-primary)] text-sm leading-relaxed">
             {mensagemCustomizada || info?.mensagem}
           </p>
         </div>
@@ -236,21 +236,21 @@ function SidebarNav({ steps, currentStep, onStepClick, assuntoSelecionado }: Sid
     <aside className="hidden lg:block w-64 flex-shrink-0">
       <div className="sticky top-24">
         {/* IZA mini */}
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-4 mb-4 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-primary-dark)] rounded-2xl p-4 mb-4 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
               <span className="text-2xl">🤖</span>
             </div>
             <div>
               <p className="font-bold">IZA</p>
-              <p className="text-xs text-blue-100">Assistente Virtual</p>
+              <p className="text-xs opacity-70">Assistente Virtual</p>
             </div>
-            <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse ml-auto" />
+            <Sparkles className="w-4 h-4 text-[var(--brand-accent)] animate-pulse ml-auto" />
           </div>
         </div>
 
         {/* Lista de passos */}
-        <nav className="bg-white rounded-2xl border border-gray-200 p-3 shadow-sm">
+        <nav className="bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border-primary)] p-3 shadow-sm">
           <ul className="space-y-1">
             {stepsVisiveis.map((step, index) => {
               const stepNumber = index + 1;
@@ -266,10 +266,10 @@ function SidebarNav({ steps, currentStep, onStepClick, assuntoSelecionado }: Sid
                     className={`
                       w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all
                       ${isCurrent
-                        ? 'bg-blue-600 text-white shadow-md'
+                        ? 'bg-[var(--brand-primary)] text-white shadow-md'
                         : isCompleted
-                          ? 'bg-green-50 text-green-800 hover:bg-green-100 cursor-pointer'
-                          : 'text-gray-400 cursor-not-allowed'
+                          ? 'bg-[var(--success)]/10 text-[var(--success)] hover:bg-[var(--success)]/20 cursor-pointer'
+                          : 'text-[var(--text-tertiary)] cursor-not-allowed'
                       }
                     `}
                   >
@@ -278,8 +278,8 @@ function SidebarNav({ steps, currentStep, onStepClick, assuntoSelecionado }: Sid
                       ${isCurrent
                         ? 'bg-white/20 text-white'
                         : isCompleted
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-100 text-gray-400'
+                          ? 'bg-[var(--success)] text-white'
+                          : 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'
                       }
                     `}>
                       {isCompleted ? <Check className="w-4 h-4" /> : stepNumber}
@@ -298,12 +298,12 @@ function SidebarNav({ steps, currentStep, onStepClick, assuntoSelecionado }: Sid
         </nav>
 
         {/* Ajuda */}
-        <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
-          <div className="flex items-center gap-2 text-amber-800 mb-2">
+        <div className="mt-4 p-4 bg-[var(--warning)]/10 rounded-xl border border-[var(--warning)]/30">
+          <div className="flex items-center gap-2 text-[var(--warning)] mb-2">
             <Phone className="w-4 h-4" />
             <span className="font-bold text-sm">Central 162</span>
           </div>
-          <p className="text-xs text-amber-700">
+          <p className="text-xs text-[var(--text-secondary)]">
             Se você não conseguir fazer o seu registro, ligue na Central 162.
           </p>
         </div>
@@ -328,8 +328,8 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
     <div className="space-y-4">
       {campos.map((campo) => (
         <div key={campo.id} className="space-y-2">
-          <label htmlFor={campo.id} className="block text-sm font-semibold text-gray-900">
-            {campo.label} {campo.obrigatorio && <span className="text-red-500">*</span>}
+          <label htmlFor={campo.id} className="block text-sm font-semibold text-[var(--text-primary)]">
+            {campo.label} {campo.obrigatorio && <span className="text-[var(--error)]">*</span>}
           </label>
 
           {campo.tipo === 'texto' && (
@@ -341,10 +341,10 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
               placeholder={campo.placeholder}
               maxLength={campo.maxLength}
               className={`
-                w-full p-4 bg-gray-50 border rounded-xl
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900 placeholder-gray-400
-                ${errors[campo.id] ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                w-full p-4 bg-[var(--bg-secondary)] border rounded-xl
+                focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                transition-all text-[var(--text-primary)] placeholder-[var(--text-tertiary)]
+                ${errors[campo.id] ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
               `}
             />
           )}
@@ -357,10 +357,10 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
               onChange={(e) => onChange(campo.id, e.target.value)}
               placeholder={campo.placeholder}
               className={`
-                w-full p-4 bg-gray-50 border rounded-xl
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900 placeholder-gray-400
-                ${errors[campo.id] ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                w-full p-4 bg-[var(--bg-secondary)] border rounded-xl
+                focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                transition-all text-[var(--text-primary)] placeholder-[var(--text-tertiary)]
+                ${errors[campo.id] ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
               `}
             />
           )}
@@ -372,10 +372,10 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
               value={valores[campo.id] || ''}
               onChange={(e) => onChange(campo.id, e.target.value)}
               className={`
-                w-full p-4 bg-gray-50 border rounded-xl
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900
-                ${errors[campo.id] ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                w-full p-4 bg-[var(--bg-secondary)] border rounded-xl
+                focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                transition-all text-[var(--text-primary)]
+                ${errors[campo.id] ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
               `}
             />
           )}
@@ -386,10 +386,10 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
               value={valores[campo.id] || ''}
               onChange={(e) => onChange(campo.id, e.target.value)}
               className={`
-                w-full p-4 bg-gray-50 border rounded-xl
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900
-                ${errors[campo.id] ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                w-full p-4 bg-[var(--bg-secondary)] border rounded-xl
+                focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                transition-all text-[var(--text-primary)]
+                ${errors[campo.id] ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
               `}
             >
               <option value="">Selecione...</option>
@@ -407,16 +407,16 @@ function FormComplementar({ campos, valores, onChange, errors }: FormComplementa
               placeholder={campo.placeholder}
               maxLength={campo.maxLength}
               className={`
-                w-full min-h-[120px] p-4 bg-gray-50 border rounded-xl resize-none
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900 placeholder-gray-400
-                ${errors[campo.id] ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                w-full min-h-[120px] p-4 bg-[var(--bg-secondary)] border rounded-xl resize-none
+                focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                transition-all text-[var(--text-primary)] placeholder-[var(--text-tertiary)]
+                ${errors[campo.id] ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
               `}
             />
           )}
 
           {errors[campo.id] && (
-            <p className="text-red-600 text-sm flex items-center gap-2">
+            <p className="text-[var(--error)] text-sm flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
               {errors[campo.id]}
             </p>
@@ -670,7 +670,7 @@ function NovaManifestacaoContent() {
   // Tela de sucesso
   if (currentStep === 99 && manifestacaoCriada) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen flex flex-col bg-[var(--bg-secondary)]">
         <Header />
         <main id="main-content" className="flex-1 py-8 md:py-12">
           <div className="container mx-auto px-4">
@@ -687,17 +687,17 @@ function NovaManifestacaoContent() {
   const progressPercent = ((getCurrentVisibleStep() - 1) / (stepsVisiveis.length - 1)) * 100;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-secondary)]">
       <Header />
 
       <main id="main-content" className="flex-1 py-6 md:py-8">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <nav className="mb-6">
-            <ol className="flex items-center gap-2 text-sm text-gray-500">
-              <li><a href="/" className="hover:text-blue-600">Início</a></li>
+            <ol className="flex items-center gap-2 text-sm text-[var(--text-tertiary)]">
+              <li><a href="/" className="hover:text-[var(--brand-primary)]">Início</a></li>
               <li>/</li>
-              <li className="text-gray-900 font-medium">{currentStepInfo?.title}</li>
+              <li className="text-[var(--text-primary)] font-medium">{currentStepInfo?.title}</li>
             </ol>
           </nav>
 
@@ -715,14 +715,14 @@ function NovaManifestacaoContent() {
               {/* Progress bar mobile */}
               <div className="lg:hidden mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-[var(--text-primary)]">
                     Etapa {getCurrentVisibleStep()} de {stepsVisiveis.length}
                   </span>
-                  <span className="text-sm text-gray-500">{currentStepInfo?.title}</span>
+                  <span className="text-sm text-[var(--text-tertiary)]">{currentStepInfo?.title}</span>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-blue-600 rounded-full"
+                    className="h-full bg-[var(--brand-primary)] rounded-full"
                     animate={{ width: `${progressPercent}%` }}
                     transition={{ duration: 0.3 }}
                   />
@@ -736,7 +736,7 @@ function NovaManifestacaoContent() {
 
               {/* Card do formulário */}
               <motion.div
-                className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+                className="bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border-primary)] shadow-sm overflow-hidden"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -758,10 +758,10 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'relato' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Descreva sua manifestação
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Escreva no mínimo {MIN_CHARS} caracteres. Seja detalhado e objetivo.
                           </p>
                         </div>
@@ -773,33 +773,33 @@ function NovaManifestacaoContent() {
                             onChange={(e) => setRelato(e.target.value)}
                             placeholder="Escreva no mínimo 20 caracteres..."
                             className={`
-                              w-full min-h-[300px] p-4 bg-gray-50 border-2 rounded-xl resize-none
-                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                              transition-all text-gray-900 placeholder-gray-400 text-base leading-relaxed
-                              ${errors.relato ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                              w-full min-h-[300px] p-4 bg-[var(--bg-secondary)] border-2 rounded-xl resize-none
+                              focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent
+                              transition-all text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-base leading-relaxed
+                              ${errors.relato ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
                             `}
                           />
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               {charCount < MIN_CHARS ? (
-                                <span className="text-sm text-amber-600">
+                                <span className="text-sm text-[var(--warning)]">
                                   Mínimo {MIN_CHARS - charCount} caracteres
                                 </span>
                               ) : (
-                                <span className="text-sm text-green-600 flex items-center gap-1">
+                                <span className="text-sm text-[var(--success)] flex items-center gap-1">
                                   <CheckCircle2 className="w-4 h-4" />
                                   Pronto para continuar
                                 </span>
                               )}
                             </div>
-                            <span className={`text-sm ${charCount > MAX_CHARS * 0.9 ? 'text-amber-600' : 'text-gray-400'}`}>
+                            <span className={`text-sm ${charCount > MAX_CHARS * 0.9 ? 'text-[var(--warning)]' : 'text-[var(--text-tertiary)]'}`}>
                               {charCount.toLocaleString()}/{MAX_CHARS.toLocaleString()}
                             </span>
                           </div>
 
                           {errors.relato && (
-                            <p className="text-red-600 text-sm flex items-center gap-2">
+                            <p className="text-[var(--error)] text-sm flex items-center gap-2">
                               <AlertTriangle className="w-4 h-4" />
                               {errors.relato}
                             </p>
@@ -812,10 +812,10 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'assunto' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Qual o assunto da sua manifestação?
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Navegue pelas categorias ou busque pelo assunto desejado.
                           </p>
                         </div>
@@ -823,8 +823,8 @@ function NovaManifestacaoContent() {
                         {isAnalyzing ? (
                           <div className="flex items-center justify-center py-12">
                             <div className="text-center">
-                              <Loader2 className="w-10 h-10 text-blue-600 animate-spin mx-auto mb-4" />
-                              <p className="text-gray-600">Analisando seu relato...</p>
+                              <Loader2 className="w-10 h-10 text-[var(--brand-primary)] animate-spin mx-auto mb-4" />
+                              <p className="text-[var(--text-secondary)]">Analisando seu relato...</p>
                             </div>
                           </div>
                         ) : (
@@ -838,11 +838,11 @@ function NovaManifestacaoContent() {
 
                         {/* Tipo de manifestação detectado */}
                         {assunto && (
-                          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Tipo identificado:</p>
+                          <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-2">Tipo identificado:</p>
                             <div className="flex items-center gap-2">
                               <span className="text-2xl">{TIPOS_INFO[tipo].emoji}</span>
-                              <span className="font-bold text-gray-900">{TIPOS_INFO[tipo].titulo}</span>
+                              <span className="font-bold text-[var(--text-primary)]">{TIPOS_INFO[tipo].titulo}</span>
                             </div>
                           </div>
                         )}
@@ -853,10 +853,10 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'complementar' && assunto?.camposComplementares && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Informações complementares
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Preencha os campos adicionais para {assunto.nome.toLowerCase()}.
                           </p>
                         </div>
@@ -874,10 +874,10 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'local' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Local do fato
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Marque no mapa ou busque o endereço onde ocorreu o fato.
                           </p>
                         </div>
@@ -902,14 +902,14 @@ function NovaManifestacaoContent() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <label htmlFor="regiao" className="block text-sm font-semibold text-gray-900">
+                            <label htmlFor="regiao" className="block text-sm font-semibold text-[var(--text-primary)]">
                               Região Administrativa
                             </label>
                             <select
                               id="regiao"
                               value={regiaoAdministrativa}
                               onChange={(e) => setRegiaoAdministrativa(e.target.value)}
-                              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)]"
                             >
                               <option value="">Selecione a região</option>
                               {REGIOES_ADMINISTRATIVAS.map((ra) => (
@@ -919,7 +919,7 @@ function NovaManifestacaoContent() {
                           </div>
 
                           <div className="space-y-2">
-                            <label htmlFor="endereco" className="block text-sm font-semibold text-gray-900">
+                            <label htmlFor="endereco" className="block text-sm font-semibold text-[var(--text-primary)]">
                               Endereço
                             </label>
                             <input
@@ -928,15 +928,15 @@ function NovaManifestacaoContent() {
                               value={endereco}
                               onChange={(e) => setEndereco(e.target.value)}
                               placeholder="Preenchido automaticamente pelo mapa"
-                              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)]"
                               readOnly={!!coordenadas}
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
-                          <label htmlFor="descricaoLocal" className="block text-sm font-semibold text-gray-900">
-                            Complemento / Ponto de referência <span className="text-red-500">*</span>
+                          <label htmlFor="descricaoLocal" className="block text-sm font-semibold text-[var(--text-primary)]">
+                            Complemento / Ponto de referência <span className="text-[var(--error)]">*</span>
                           </label>
                           <textarea
                             id="descricaoLocal"
@@ -944,13 +944,13 @@ function NovaManifestacaoContent() {
                             onChange={(e) => setDescricaoLocal(e.target.value)}
                             placeholder="Ex: Em frente ao mercado, próximo à escola, quadra 5 conjunto B..."
                             className={`
-                              w-full min-h-[100px] p-4 bg-gray-50 border rounded-xl resize-none
-                              focus:outline-none focus:ring-2 focus:ring-blue-500
-                              ${errors.descricaoLocal ? 'border-red-300 bg-red-50' : 'border-gray-200'}
+                              w-full min-h-[100px] p-4 bg-[var(--bg-secondary)] border rounded-xl resize-none
+                              focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)]
+                              ${errors.descricaoLocal ? 'border-[var(--error)] bg-[var(--error-light)]' : 'border-[var(--border-primary)]'}
                             `}
                           />
                           {errors.descricaoLocal && (
-                            <p className="text-red-600 text-sm flex items-center gap-2">
+                            <p className="text-[var(--error)] text-sm flex items-center gap-2">
                               <AlertTriangle className="w-4 h-4" />
                               {errors.descricaoLocal}
                             </p>
@@ -963,41 +963,41 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'resumo' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Resumo da manifestação
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Revise as informações antes de continuar.
                           </p>
                         </div>
 
                         <div className="space-y-4">
-                          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Seu registro</p>
-                            <p className="text-gray-700 whitespace-pre-wrap line-clamp-6">{relato}</p>
+                          <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                            <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-1">Seu registro</p>
+                            <p className="text-[var(--text-primary)] whitespace-pre-wrap line-clamp-6">{relato}</p>
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Assunto</p>
-                              <p className="font-bold text-gray-900">{assunto?.nome}</p>
-                              <p className="text-sm text-gray-500">{assunto?.categoria}</p>
+                            <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                              <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-1">Assunto</p>
+                              <p className="font-bold text-[var(--text-primary)]">{assunto?.nome}</p>
+                              <p className="text-sm text-[var(--text-tertiary)]">{assunto?.categoria}</p>
                             </div>
 
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Órgão responsável</p>
-                              <p className="font-bold text-gray-900">{assunto?.orgaoResponsavel}</p>
+                            <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                              <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-1">Órgão responsável</p>
+                              <p className="font-bold text-[var(--text-primary)]">{assunto?.orgaoResponsavel}</p>
                             </div>
                           </div>
 
                           {Object.keys(dadosComplementares).length > 0 && (
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Dados complementares</p>
+                            <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                              <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-2">Dados complementares</p>
                               <div className="space-y-1">
                                 {Object.entries(dadosComplementares).map(([key, value]) => {
                                   const campo = assunto?.camposComplementares?.find(c => c.id === key);
                                   return value ? (
-                                    <p key={key} className="text-sm text-gray-700">
+                                    <p key={key} className="text-sm text-[var(--text-primary)]">
                                       <span className="font-medium">{campo?.label}:</span> {value}
                                     </p>
                                   ) : null;
@@ -1007,11 +1007,11 @@ function NovaManifestacaoContent() {
                           )}
 
                           {(regiaoAdministrativa || endereco || descricaoLocal) && (
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
-                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Local do fato</p>
-                              {regiaoAdministrativa && <p className="text-sm text-gray-700">{regiaoAdministrativa}</p>}
-                              {endereco && <p className="text-sm text-gray-700">{endereco}</p>}
-                              {descricaoLocal && <p className="text-sm text-gray-700">{descricaoLocal}</p>}
+                            <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                              <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-2">Local do fato</p>
+                              {regiaoAdministrativa && <p className="text-sm text-[var(--text-primary)]">{regiaoAdministrativa}</p>}
+                              {endereco && <p className="text-sm text-[var(--text-primary)]">{endereco}</p>}
+                              {descricaoLocal && <p className="text-sm text-[var(--text-primary)]">{descricaoLocal}</p>}
                             </div>
                           )}
                         </div>
@@ -1019,7 +1019,7 @@ function NovaManifestacaoContent() {
                         <button
                           type="button"
                           onClick={() => goToStep(1)}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+                          className="text-[var(--brand-primary)] hover:opacity-80 text-sm font-medium flex items-center gap-1"
                         >
                           <ArrowLeft className="w-4 h-4" />
                           Editar informações
@@ -1031,10 +1031,10 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'identificacao' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Identificação
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Escolha se deseja se identificar ou permanecer anônimo.
                           </p>
                         </div>
@@ -1045,22 +1045,22 @@ function NovaManifestacaoContent() {
                             onClick={() => setAnonimo(true)}
                             className={`
                               relative p-6 rounded-xl border-2 text-left transition-all
-                              ${anonimo ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}
+                              ${anonimo ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)]/10' : 'border-[var(--border-primary)] hover:border-[var(--border-secondary)]'}
                             `}
                           >
                             <div className="flex items-start gap-4">
-                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${anonimo ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${anonimo ? 'bg-[var(--brand-primary)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'}`}>
                                 <UserX className="w-6 h-6" />
                               </div>
                               <div>
-                                <p className="font-bold text-gray-900">Avançar sem identificação</p>
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="font-bold text-[var(--text-primary)]">Avançar sem identificação</p>
+                                <p className="text-sm text-[var(--text-tertiary)] mt-1">
                                   Não será possível acompanhar o andamento
                                 </p>
                               </div>
                             </div>
                             {anonimo && (
-                              <div className="absolute top-3 right-3 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                              <div className="absolute top-3 right-3 w-6 h-6 bg-[var(--brand-primary)] rounded-full flex items-center justify-center">
                                 <Check className="w-4 h-4 text-white" />
                               </div>
                             )}
@@ -1071,22 +1071,22 @@ function NovaManifestacaoContent() {
                             onClick={() => setAnonimo(false)}
                             className={`
                               relative p-6 rounded-xl border-2 text-left transition-all
-                              ${!anonimo ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}
+                              ${!anonimo ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)]/10' : 'border-[var(--border-primary)] hover:border-[var(--border-secondary)]'}
                             `}
                           >
                             <div className="flex items-start gap-4">
-                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${!anonimo ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${!anonimo ? 'bg-[var(--brand-primary)] text-white' : 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'}`}>
                                 <User className="w-6 h-6" />
                               </div>
                               <div>
-                                <p className="font-bold text-gray-900">Prefiro me identificar</p>
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="font-bold text-[var(--text-primary)]">Prefiro me identificar</p>
+                                <p className="text-sm text-[var(--text-tertiary)] mt-1">
                                   Acompanhe por e-mail e receba atualizações
                                 </p>
                               </div>
                             </div>
                             {!anonimo && (
-                              <div className="absolute top-3 right-3 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                              <div className="absolute top-3 right-3 w-6 h-6 bg-[var(--brand-primary)] rounded-full flex items-center justify-center">
                                 <Check className="w-4 h-4 text-white" />
                               </div>
                             )}
@@ -1094,12 +1094,12 @@ function NovaManifestacaoContent() {
                         </div>
 
                         {anonimo ? (
-                          <div className="p-5 bg-amber-50 rounded-xl border border-amber-200">
+                          <div className="p-5 bg-[var(--warning)]/10 rounded-xl border border-[var(--warning)]/30">
                             <div className="flex items-start gap-3">
-                              <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                              <Shield className="w-5 h-5 text-[var(--warning)] flex-shrink-0 mt-0.5" />
                               <div>
-                                <p className="font-bold text-amber-800 mb-1">Manifestação Anônima</p>
-                                <p className="text-sm text-amber-700">
+                                <p className="font-bold text-[var(--text-primary)] mb-1">Manifestação Anônima</p>
+                                <p className="text-sm text-[var(--text-secondary)]">
                                   Conforme Art. 14 da Instrução Normativa CGDF N° 01 de 05/05/2017,
                                   manifestações anônimas não podem ter seu andamento acompanhado pelo manifestante.
                                 </p>
@@ -1110,8 +1110,8 @@ function NovaManifestacaoContent() {
                           <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="space-y-2">
-                                <label htmlFor="nome" className="block text-sm font-semibold text-gray-900">
-                                  Nome completo <span className="text-red-500">*</span>
+                                <label htmlFor="nome" className="block text-sm font-semibold text-[var(--text-primary)]">
+                                  Nome completo <span className="text-[var(--error)]">*</span>
                                 </label>
                                 <input
                                   type="text"
@@ -1119,29 +1119,29 @@ function NovaManifestacaoContent() {
                                   value={nome}
                                   onChange={(e) => setNome(e.target.value)}
                                   placeholder="Seu nome"
-                                  className={`w-full p-4 bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.nome ? 'border-red-300' : 'border-gray-200'}`}
+                                  className={`w-full p-4 bg-[var(--bg-secondary)] border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] ${errors.nome ? 'border-[var(--error)]' : 'border-[var(--border-primary)]'}`}
                                 />
-                                {errors.nome && <p className="text-red-600 text-sm">{errors.nome}</p>}
+                                {errors.nome && <p className="text-[var(--error)] text-sm">{errors.nome}</p>}
                               </div>
 
                               <div className="space-y-2">
-                                <label htmlFor="cpf" className="block text-sm font-semibold text-gray-900">CPF</label>
+                                <label htmlFor="cpf" className="block text-sm font-semibold text-[var(--text-primary)]">CPF</label>
                                 <input
                                   type="text"
                                   id="cpf"
                                   value={formatCPF(cpf)}
                                   onChange={(e) => setCpf(e.target.value.replace(/\D/g, ''))}
                                   placeholder="000.000.000-00"
-                                  className={`w-full p-4 bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.cpf ? 'border-red-300' : 'border-gray-200'}`}
+                                  className={`w-full p-4 bg-[var(--bg-secondary)] border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] ${errors.cpf ? 'border-[var(--error)]' : 'border-[var(--border-primary)]'}`}
                                 />
-                                {errors.cpf && <p className="text-red-600 text-sm">{errors.cpf}</p>}
+                                {errors.cpf && <p className="text-[var(--error)] text-sm">{errors.cpf}</p>}
                               </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-semibold text-gray-900">
-                                  E-mail <span className="text-red-500">*</span>
+                                <label htmlFor="email" className="block text-sm font-semibold text-[var(--text-primary)]">
+                                  E-mail <span className="text-[var(--error)]">*</span>
                                 </label>
                                 <input
                                   type="email"
@@ -1149,27 +1149,27 @@ function NovaManifestacaoContent() {
                                   value={email}
                                   onChange={(e) => setEmail(e.target.value)}
                                   placeholder="seu@email.com"
-                                  className={`w-full p-4 bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-300' : 'border-gray-200'}`}
+                                  className={`w-full p-4 bg-[var(--bg-secondary)] border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] ${errors.email ? 'border-[var(--error)]' : 'border-[var(--border-primary)]'}`}
                                 />
-                                {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
+                                {errors.email && <p className="text-[var(--error)] text-sm">{errors.email}</p>}
                               </div>
 
                               <div className="space-y-2">
-                                <label htmlFor="telefone" className="block text-sm font-semibold text-gray-900">Telefone</label>
+                                <label htmlFor="telefone" className="block text-sm font-semibold text-[var(--text-primary)]">Telefone</label>
                                 <input
                                   type="tel"
                                   id="telefone"
                                   value={formatTelefone(telefone)}
                                   onChange={(e) => setTelefone(e.target.value.replace(/\D/g, ''))}
                                   placeholder="(61) 99999-9999"
-                                  className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  className="w-full p-4 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)]"
                                 />
                               </div>
                             </div>
 
-                            <div className="p-4 bg-blue-50 rounded-xl border border-blue-200 flex items-start gap-3">
-                              <Lock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                              <p className="text-sm text-blue-800">
+                            <div className="p-4 bg-[var(--info)]/10 rounded-xl border border-[var(--info)]/30 flex items-start gap-3">
+                              <Lock className="w-5 h-5 text-[var(--info)] flex-shrink-0 mt-0.5" />
+                              <p className="text-sm text-[var(--text-primary)]">
                                 Seus dados são protegidos pela LGPD e serão utilizados apenas para acompanhamento.
                               </p>
                             </div>
@@ -1182,17 +1182,17 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'anexos' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Anexar arquivos
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Adicione fotos, documentos ou gravações que comprovem sua manifestação (opcional).
                           </p>
                         </div>
 
-                        <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
-                          <p className="text-sm text-amber-800 flex items-start gap-2">
-                            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <div className="p-4 bg-[var(--warning)]/10 rounded-xl border border-[var(--warning)]/30">
+                          <p className="text-sm text-[var(--text-primary)] flex items-start gap-2">
+                            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--warning)]" />
                             <span>
                               <strong>Atenção:</strong> A partir desta etapa você não pode mais alterar seu texto.
                               Tamanho máximo: 25 MB. Formatos: pdf, png, jpg, jpeg, xlsx, docx, mp3, mp4.
@@ -1213,9 +1213,9 @@ function NovaManifestacaoContent() {
                         {anexos.length > 0 ? (
                           <AnexosList anexos={anexos} onRemove={removeAnexo} />
                         ) : (
-                          <div className="p-8 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 text-center">
-                            <Paperclip className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                            <p className="text-gray-500 text-sm">Nenhum anexo adicionado</p>
+                          <div className="p-8 bg-[var(--bg-secondary)] rounded-xl border-2 border-dashed border-[var(--border-primary)] text-center">
+                            <Paperclip className="w-10 h-10 text-[var(--text-tertiary)] mx-auto mb-2" />
+                            <p className="text-[var(--text-tertiary)] text-sm">Nenhum anexo adicionado</p>
                           </div>
                         )}
                       </div>
@@ -1225,50 +1225,50 @@ function NovaManifestacaoContent() {
                     {currentStepInfo?.key === 'protocolo' && (
                       <div className="space-y-6">
                         <div>
-                          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                          <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
                             Finalizar manifestação
                           </h1>
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-[var(--text-secondary)] text-sm">
                             Aceite os termos para enviar sua manifestação.
                           </p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                          <div className="p-4 bg-gray-50 rounded-xl">
-                            <p className="text-xs text-gray-500 uppercase mb-1">Tipo</p>
-                            <p className="font-bold">{TIPOS_INFO[tipo].emoji} {TIPOS_INFO[tipo].titulo}</p>
+                          <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                            <p className="text-xs text-[var(--text-tertiary)] uppercase mb-1">Tipo</p>
+                            <p className="font-bold text-[var(--text-primary)]">{TIPOS_INFO[tipo].emoji} {TIPOS_INFO[tipo].titulo}</p>
                           </div>
-                          <div className="p-4 bg-gray-50 rounded-xl">
-                            <p className="text-xs text-gray-500 uppercase mb-1">Manifestante</p>
-                            <p className="font-bold">{anonimo ? 'Anônimo' : nome}</p>
+                          <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+                            <p className="text-xs text-[var(--text-tertiary)] uppercase mb-1">Manifestante</p>
+                            <p className="font-bold text-[var(--text-primary)]">{anonimo ? 'Anônimo' : nome}</p>
                           </div>
                         </div>
 
-                        <div className="p-5 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div className="p-5 bg-[var(--warning)]/10 border border-[var(--warning)]/30 rounded-xl">
                           <label className="flex items-start gap-4 cursor-pointer">
                             <input
                               type="checkbox"
                               checked={aceitaTermos}
                               onChange={(e) => setAceitaTermos(e.target.checked)}
-                              className="mt-1 w-5 h-5 rounded border-2 border-amber-400 text-amber-600 focus:ring-amber-500"
+                              className="mt-1 w-5 h-5 rounded border-2 border-[var(--warning)] text-[var(--warning)] focus:ring-[var(--warning)]"
                             />
-                            <span className="text-sm text-amber-800">
+                            <span className="text-sm text-[var(--text-primary)]">
                               Declaro que as informações prestadas são verdadeiras e assumo inteira responsabilidade
                               pelas mesmas, ciente de que a prestação de informações falsas poderá acarretar
                               penalidades legais conforme Art. 299 do Código Penal.
                             </span>
                           </label>
                           {errors.termos && (
-                            <p className="text-red-600 text-sm mt-3 flex items-center gap-2">
+                            <p className="text-[var(--error)] text-sm mt-3 flex items-center gap-2">
                               <AlertTriangle className="w-4 h-4" />
                               {errors.termos}
                             </p>
                           )}
                         </div>
 
-                        <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                          <p className="text-sm text-blue-800 flex items-start gap-2">
-                            <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <div className="p-4 bg-[var(--info)]/10 rounded-xl border border-[var(--info)]/30">
+                          <p className="text-sm text-[var(--text-primary)] flex items-start gap-2">
+                            <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--info)]" />
                             <span>
                               Após o envio, você receberá um número de protocolo. O prazo de resposta é de
                               até 30 dias úteis conforme Lei 13.460/2017.
@@ -1282,14 +1282,14 @@ function NovaManifestacaoContent() {
 
                 {/* Botões de navegação */}
                 <div className="px-6 md:px-8 pb-6 md:pb-8">
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                  <div className="flex items-center justify-between pt-6 border-t border-[var(--border-primary)]">
                     <button
                       type="button"
                       onClick={handleBack}
                       disabled={currentStep === 1}
                       className={`
                         flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all
-                        ${currentStep === 1 ? 'opacity-0 pointer-events-none' : 'text-gray-700 hover:bg-gray-100'}
+                        ${currentStep === 1 ? 'opacity-0 pointer-events-none' : 'text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]'}
                       `}
                     >
                       <ArrowLeft className="w-5 h-5" />
@@ -1300,7 +1300,7 @@ function NovaManifestacaoContent() {
                       type="button"
                       onClick={handleNext}
                       disabled={isSubmitting || isAnalyzing}
-                      className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+                      className="flex items-center gap-2 px-8 py-3 bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] disabled:bg-[var(--bg-tertiary)] disabled:text-[var(--text-tertiary)] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
                     >
                       {isSubmitting || isAnalyzing ? (
                         <>
@@ -1335,10 +1335,10 @@ function NovaManifestacaoContent() {
 export default function NovaManifestacaoPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-secondary)]">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Carregando...</p>
+          <div className="w-16 h-16 border-4 border-[var(--brand-primary)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[var(--text-secondary)]">Carregando...</p>
         </div>
       </div>
     }>

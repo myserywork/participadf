@@ -34,10 +34,10 @@ interface MapaLocalizacaoProps {
 const MapaLeaflet = dynamic(() => import('./MapaLeafletInner'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[400px] bg-gray-100 rounded-xl flex items-center justify-center">
+    <div className="w-full h-[400px] bg-[var(--bg-tertiary)] rounded-xl flex items-center justify-center">
       <div className="text-center">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-2" />
-        <p className="text-gray-500 text-sm">Carregando mapa...</p>
+        <Loader2 className="w-8 h-8 text-[var(--brand-primary)] animate-spin mx-auto mb-2" />
+        <p className="text-[var(--text-tertiary)] text-sm">Carregando mapa...</p>
       </div>
     </div>
   )
@@ -222,16 +222,16 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
       <div className="relative">
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Busque um endereço ou CEP..."
-              className="w-full pl-12 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full pl-12 pr-10 py-3 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent text-[var(--text-primary)]"
             />
             {isSearching && (
-              <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
+              <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-tertiary)] animate-spin" />
             )}
             {searchQuery && !isSearching && (
               <button
@@ -240,9 +240,9 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
                   setSearchQuery('');
                   setShowResults(false);
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-[var(--bg-tertiary)] rounded-full"
               >
-                <X className="w-4 h-4 text-gray-400" />
+                <X className="w-4 h-4 text-[var(--text-tertiary)]" />
               </button>
             )}
           </div>
@@ -251,7 +251,7 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
             type="button"
             onClick={handleUseCurrentLocation}
             disabled={isGettingLocation}
-            className="px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white rounded-xl flex items-center gap-2 transition-colors"
+            className="px-4 py-3 bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] disabled:bg-[var(--bg-tertiary)] text-white rounded-xl flex items-center gap-2 transition-colors"
             title="Usar minha localização"
           >
             {isGettingLocation ? (
@@ -265,17 +265,17 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
 
         {/* Resultados da busca */}
         {showResults && searchResults.length > 0 && (
-          <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+          <div className="absolute z-50 w-full mt-2 bg-[var(--bg-elevated)] border border-[var(--border-primary)] rounded-xl shadow-lg max-h-60 overflow-y-auto">
             {searchResults.map((result, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleResultSelect(result)}
-                className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                className="w-full px-4 py-3 text-left hover:bg-[var(--bg-secondary)] transition-colors border-b border-[var(--border-primary)]/50 last:border-b-0"
               >
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700 line-clamp-2">{result.display_name}</span>
+                  <MapPin className="w-5 h-5 text-[var(--text-tertiary)] flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-[var(--text-primary)] line-clamp-2">{result.display_name}</span>
                 </div>
               </button>
             ))}
@@ -284,7 +284,7 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
       </div>
 
       {/* Mapa */}
-      <div className="relative rounded-xl overflow-hidden border border-gray-200">
+      <div className="relative rounded-xl overflow-hidden border border-[var(--border-primary)]">
         <MapaLeaflet
           center={mapCenter}
           selectedLocation={selectedLocation}
@@ -294,14 +294,14 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
 
       {/* Local selecionado */}
       {selectedLocation && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+        <div className="p-4 bg-[var(--success)]/10 border border-[var(--success)]/30 rounded-xl">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-[var(--success)] flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-green-800">Local selecionado</p>
-                <p className="text-sm text-green-700 mt-1">{selectedLocation.endereco}</p>
-                <p className="text-xs text-green-600 mt-1">
+                <p className="font-medium text-[var(--success)]">Local selecionado</p>
+                <p className="text-sm text-[var(--text-secondary)] mt-1">{selectedLocation.endereco}</p>
+                <p className="text-xs text-[var(--success)] mt-1">
                   Coordenadas: {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
                 </p>
               </div>
@@ -309,9 +309,9 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
             <button
               type="button"
               onClick={handleClear}
-              className="p-1 hover:bg-green-100 rounded-lg transition-colors"
+              className="p-1 hover:bg-[var(--success)]/20 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-green-600" />
+              <X className="w-5 h-5 text-[var(--success)]" />
             </button>
           </div>
         </div>
@@ -319,7 +319,7 @@ export default function MapaLocalizacao({ onLocationSelect, initialLocation }: M
 
       {/* Instrução */}
       {!selectedLocation && (
-        <p className="text-sm text-gray-500 text-center">
+        <p className="text-sm text-[var(--text-tertiary)] text-center">
           Clique no mapa ou busque um endereço para marcar a localização do fato
         </p>
       )}
