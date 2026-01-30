@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Header, Footer, AudioRecorder, VideoRecorder, FileUpload, AnexosList, ProtocoloSucesso } from '@/components';
+import { Header, Footer, AudioRecorder, VideoRecorder, FileUpload, AnexosList, ProtocoloSucesso, MapaLocalizacao, SeletorAssunto } from '@/components';
 import {
   ArrowLeft,
   ArrowRight,
@@ -43,13 +43,9 @@ import { TipoManifestacao, OrgaoGDF, ORGAOS_GDF, Anexo, Manifestacao } from '@/l
 import { gerarProtocolo, validarCPF, validarEmail, validarTelefone, gerarId } from '@/lib/utils';
 import { useManifestacaoStore } from '@/lib/store';
 import {
-  ASSUNTOS,
   Assunto,
   CampoComplementar,
-  buscarAssuntos,
-  sugerirAssuntosPorRelato,
-  getAssuntoPorId,
-  CATEGORIAS_ASSUNTOS
+  sugerirAssuntosPorRelato
 } from '@/lib/assuntos';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -317,182 +313,6 @@ function SidebarNav({ steps, currentStep, onStepClick, assuntoSelecionado }: Sid
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COMPONENTE AUTOCOMPLETE ASSUNTO
-// ═══════════════════════════════════════════════════════════════════════════
-
-interface AutocompleteAssuntoProps {
-  value: Assunto | null;
-  onChange: (assunto: Assunto | null) => void;
-  sugestoes: Assunto[];
-  erro?: string;
-}
-
-function AutocompleteAssunto({ value, onChange, sugestoes, erro }: AutocompleteAssuntoProps) {
-  const [busca, setBusca] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [resultados, setResultados] = useState<Assunto[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (busca.length >= 4) {
-      setResultados(buscarAssuntos(busca));
-      setIsOpen(true);
-    } else {
-      setResultados([]);
-      if (busca.length === 0) {
-        setIsOpen(false);
-      }
-    }
-  }, [busca]);
-
-  const handleSelect = (assunto: Assunto) => {
-    onChange(assunto);
-    setBusca('');
-    setIsOpen(false);
-  };
-
-  const handleClear = () => {
-    onChange(null);
-    setBusca('');
-    setIsOpen(false);
-  };
-
-  return (
-    <div className="space-y-4">
-      {/* Sugestões da IA */}
-      {sugestoes.length > 0 && !value && (
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-yellow-500" />
-            Sugestões baseadas no seu relato:
-          </p>
-          <div className="space-y-2">
-            {sugestoes.map((assunto) => (
-              <button
-                key={assunto.id}
-                type="button"
-                onClick={() => handleSelect(assunto)}
-                className="w-full p-4 bg-white border-2 border-blue-200 rounded-xl text-left hover:border-blue-400 hover:bg-blue-50 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900 group-hover:text-blue-700">
-                      {assunto.nome}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {assunto.categoria} • {assunto.orgaoResponsavel}
-                    </p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Valor selecionado */}
-      {value && (
-        <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <CheckCircle2 className="w-5 h-5 text-green-600" />
-                <p className="font-bold text-green-800">{value.nome}</p>
-              </div>
-              <p className="text-sm text-green-700">
-                {value.categoria} • Órgão: {value.orgaoResponsavel}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleClear}
-              className="p-1 hover:bg-green-100 rounded-lg transition-colors"
-              aria-label="Remover seleção"
-            >
-              <X className="w-5 h-5 text-green-600" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Campo de busca */}
-      {!value && (
-        <div className="space-y-2">
-          <p className="text-sm text-gray-600">
-            {sugestoes.length > 0
-              ? 'Ou pesquise por outro assunto:'
-              : 'Pesquise o assunto da sua manifestação (mínimo 4 caracteres):'
-            }
-          </p>
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder="Digite para buscar... (ex: iluminação, ônibus, buraco)"
-              className={`
-                w-full pl-12 pr-4 py-4 bg-white border-2 rounded-xl
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                transition-all text-gray-900 placeholder-gray-400
-                ${erro ? 'border-red-300' : 'border-gray-200'}
-              `}
-            />
-            {busca && (
-              <button
-                type="button"
-                onClick={() => setBusca('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
-              >
-                <X className="w-4 h-4 text-gray-400" />
-              </button>
-            )}
-          </div>
-
-          {/* Resultados da busca */}
-          {isOpen && busca.length >= 4 && (
-            <div className="bg-white border border-gray-200 rounded-xl shadow-lg max-h-64 overflow-y-auto">
-              {resultados.length > 0 ? (
-                <ul className="py-2">
-                  {resultados.map((assunto) => (
-                    <li key={assunto.id}>
-                      <button
-                        type="button"
-                        onClick={() => handleSelect(assunto)}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors"
-                      >
-                        <p className="font-medium text-gray-900">{assunto.nome}</p>
-                        <p className="text-xs text-gray-500">
-                          {assunto.categoria} • {assunto.orgaoResponsavel}
-                        </p>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="p-4 text-center text-gray-500">
-                  <p className="text-sm">Nenhum assunto encontrado para "{busca}"</p>
-                  <p className="text-xs mt-1">Tente usar outras palavras-chave</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {erro && (
-        <p className="text-red-600 text-sm flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4" />
-          {erro}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // COMPONENTE FORMULÁRIO COMPLEMENTAR
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -632,6 +452,7 @@ function NovaManifestacaoContent() {
   const [regiaoAdministrativa, setRegiaoAdministrativa] = useState('');
   const [endereco, setEndereco] = useState('');
   const [descricaoLocal, setDescricaoLocal] = useState('');
+  const [coordenadas, setCoordenadas] = useState<{ lat: number; lng: number } | null>(null);
   const [anonimo, setAnonimo] = useState(false);
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -995,7 +816,7 @@ function NovaManifestacaoContent() {
                             Qual o assunto da sua manifestação?
                           </h1>
                           <p className="text-gray-600 text-sm">
-                            Selecione uma das sugestões ou pesquise por outro assunto.
+                            Navegue pelas categorias ou busque pelo assunto desejado.
                           </p>
                         </div>
 
@@ -1007,7 +828,7 @@ function NovaManifestacaoContent() {
                             </div>
                           </div>
                         ) : (
-                          <AutocompleteAssunto
+                          <SeletorAssunto
                             value={assunto}
                             onChange={setAssunto}
                             sugestoes={assuntosSugeridos}
@@ -1057,18 +878,27 @@ function NovaManifestacaoContent() {
                             Local do fato
                           </h1>
                           <p className="text-gray-600 text-sm">
-                            Informe onde ocorreu o fato relatado.
+                            Marque no mapa ou busque o endereço onde ocorreu o fato.
                           </p>
                         </div>
 
-                        {/* Mapa placeholder */}
-                        <div className="aspect-video bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <MapPin className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                            <p className="font-medium">Mapa interativo</p>
-                            <p className="text-sm">Clique para marcar a localização</p>
-                          </div>
-                        </div>
+                        {/* Mapa interativo */}
+                        <MapaLocalizacao
+                          onLocationSelect={(location) => {
+                            setCoordenadas({ lat: location.lat, lng: location.lng });
+                            setEndereco(location.endereco);
+                            if (location.bairro) {
+                              // Tenta encontrar a RA correspondente
+                              const raMatch = REGIOES_ADMINISTRATIVAS.find(ra =>
+                                location.bairro && ra.toLowerCase().includes(location.bairro.toLowerCase())
+                              );
+                              if (raMatch) {
+                                setRegiaoAdministrativa(raMatch);
+                              }
+                            }
+                          }}
+                          initialLocation={coordenadas || undefined}
+                        />
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
@@ -1090,28 +920,29 @@ function NovaManifestacaoContent() {
 
                           <div className="space-y-2">
                             <label htmlFor="endereco" className="block text-sm font-semibold text-gray-900">
-                              Endereço/CEP
+                              Endereço
                             </label>
                             <input
                               type="text"
                               id="endereco"
                               value={endereco}
                               onChange={(e) => setEndereco(e.target.value)}
-                              placeholder="Rua, número ou CEP"
+                              placeholder="Preenchido automaticamente pelo mapa"
                               className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              readOnly={!!coordenadas}
                             />
                           </div>
                         </div>
 
                         <div className="space-y-2">
                           <label htmlFor="descricaoLocal" className="block text-sm font-semibold text-gray-900">
-                            Descrição do local do fato <span className="text-red-500">*</span>
+                            Complemento / Ponto de referência <span className="text-red-500">*</span>
                           </label>
                           <textarea
                             id="descricaoLocal"
                             value={descricaoLocal}
                             onChange={(e) => setDescricaoLocal(e.target.value)}
-                            placeholder="Descreva pontos de referência, quadra, conjunto, etc."
+                            placeholder="Ex: Em frente ao mercado, próximo à escola, quadra 5 conjunto B..."
                             className={`
                               w-full min-h-[100px] p-4 bg-gray-50 border rounded-xl resize-none
                               focus:outline-none focus:ring-2 focus:ring-blue-500
