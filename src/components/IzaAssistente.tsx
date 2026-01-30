@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Sparkles, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, Loader2, CheckCircle2, HelpCircle, ChevronDown, ChevronUp, MessageSquare } from 'lucide-react';
 import { TipoManifestacao, OrgaoGDF } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,42 +15,53 @@ interface ClassificacaoIA {
 
 interface IzaAssistenteProps {
   onClassificacao?: (classificacao: ClassificacaoIA) => void;
+  onRelatoChange?: (texto: string) => void;
   conteudo?: string;
   className?: string;
+  modo?: 'completo' | 'compacto';
 }
+
+// Mapeamento de tipos para exibição
+const TIPO_LABEL: Record<TipoManifestacao, { nome: string; emoji: string; cor: string }> = {
+  reclamacao: { nome: 'Reclamação', emoji: '😤', cor: 'from-amber-500 to-orange-500' },
+  sugestao: { nome: 'Sugestão', emoji: '💡', cor: 'from-purple-500 to-violet-500' },
+  elogio: { nome: 'Elogio', emoji: '⭐', cor: 'from-green-500 to-emerald-500' },
+  denuncia: { nome: 'Denúncia', emoji: '⚠️', cor: 'from-red-500 to-rose-500' },
+  solicitacao: { nome: 'Solicitação', emoji: '📋', cor: 'from-blue-500 to-cyan-500' }
+};
 
 // Simulação da IA IZA para classificação automática
 function classificarComIZA(texto: string): ClassificacaoIA {
   const textoLower = texto.toLowerCase();
-  
+
   // Palavras-chave por tipo de manifestação
   const keywords: Record<TipoManifestacao, string[]> = {
-    reclamacao: ['ruim', 'péssimo', 'insatisfeito', 'demora', 'falta', 'não funciona', 'problema', 'falha', 'pior', 'descaso', 'absurdo', 'buraco', 'esgoto', 'lixo'],
-    sugestao: ['sugiro', 'poderia', 'melhorar', 'ideia', 'proposta', 'seria bom', 'gostaria que', 'recomendo'],
-    elogio: ['parabéns', 'excelente', 'ótimo', 'bom trabalho', 'agradeço', 'satisfeito', 'eficiente', 'atencioso', 'maravilhoso'],
-    denuncia: ['irregularidade', 'corrupção', 'desvio', 'fraude', 'ilegal', 'crime', 'abuso', 'assédio', 'tráfico'],
-    solicitacao: ['solicito', 'preciso', 'necessito', 'requeiro', 'peço', 'gostaria de', 'quero', 'desejo']
+    reclamacao: ['ruim', 'péssimo', 'insatisfeito', 'demora', 'falta', 'não funciona', 'problema', 'falha', 'pior', 'descaso', 'absurdo', 'buraco', 'esgoto', 'lixo', 'abandonado', 'quebrado', 'estragado', 'não atende', 'demorado', 'atrasado'],
+    sugestao: ['sugiro', 'poderia', 'melhorar', 'ideia', 'proposta', 'seria bom', 'gostaria que', 'recomendo', 'propor', 'implementar', 'criar', 'desenvolver'],
+    elogio: ['parabéns', 'excelente', 'ótimo', 'bom trabalho', 'agradeço', 'satisfeito', 'eficiente', 'atencioso', 'maravilhoso', 'obrigado', 'prestativo', 'rápido', 'competente'],
+    denuncia: ['irregularidade', 'corrupção', 'desvio', 'fraude', 'ilegal', 'crime', 'abuso', 'assédio', 'tráfico', 'violação', 'ilícito', 'propina', 'suborno'],
+    solicitacao: ['solicito', 'preciso', 'necessito', 'requeiro', 'peço', 'gostaria de', 'quero', 'desejo', 'informação', 'documento', 'atendimento', 'serviço']
   };
 
   // Palavras-chave por órgão
   const orgaoKeywords: { [key: string]: string[] } = {
-    'SEEDF': ['escola', 'educação', 'professor', 'aluno', 'matrícula', 'ensino', 'aula'],
-    'SES': ['hospital', 'saúde', 'médico', 'UBS', 'posto de saúde', 'remédio', 'consulta', 'exame', 'dengue', 'vacina'],
-    'SSP': ['segurança', 'polícia', 'delegacia', 'crime', 'violência', 'assalto', 'furto', 'roubo'],
-    'DETRAN': ['carro', 'veículo', 'CNH', 'multa', 'habilitação', 'trânsito', 'licenciamento', 'semáforo'],
-    'CAESB': ['água', 'esgoto', 'vazamento', 'falta de água', 'conta de água'],
-    'CEB': ['luz', 'energia', 'falta de luz', 'conta de luz', 'poste', 'iluminação'],
-    'NOVACAP': ['buraco', 'asfalto', 'obra', 'calçada', 'praça', 'parque', 'árvore'],
-    'SLU': ['lixo', 'coleta', 'reciclagem', 'limpeza urbana', 'entulho'],
-    'SEAGRI': ['agricultura', 'rural', 'fazenda', 'produtor'],
-    'SEMOB': ['ônibus', 'transporte público', 'tarifa', 'linha', 'horário', 'metrô', 'terminal'],
+    'SEEDF': ['escola', 'educação', 'professor', 'aluno', 'matrícula', 'ensino', 'aula', 'creche', 'estudante'],
+    'SES': ['hospital', 'saúde', 'médico', 'UBS', 'posto de saúde', 'remédio', 'consulta', 'exame', 'dengue', 'vacina', 'enfermeiro', 'clínica'],
+    'SSP': ['segurança', 'polícia', 'delegacia', 'crime', 'violência', 'assalto', 'furto', 'roubo', 'bombeiro'],
+    'DETRAN': ['carro', 'veículo', 'CNH', 'multa', 'habilitação', 'trânsito', 'licenciamento', 'semáforo', 'placa', 'motorista'],
+    'CAESB': ['água', 'esgoto', 'vazamento', 'falta de água', 'conta de água', 'saneamento', 'hidrômetro'],
+    'CEB': ['luz', 'energia', 'falta de luz', 'conta de luz', 'poste', 'iluminação', 'elétrica', 'apagão'],
+    'NOVACAP': ['buraco', 'asfalto', 'obra', 'calçada', 'praça', 'parque', 'árvore', 'poda', 'infraestrutura'],
+    'SLU': ['lixo', 'coleta', 'reciclagem', 'limpeza urbana', 'entulho', 'container', 'gari'],
+    'SEAGRI': ['agricultura', 'rural', 'fazenda', 'produtor', 'agrícola'],
+    'SEMOB': ['ônibus', 'transporte público', 'tarifa', 'linha', 'horário', 'metrô', 'terminal', 'passe livre', 'BRT'],
     'Outro': []
   };
 
   // Calcular tipo
   let tipoDetectado: TipoManifestacao = 'solicitacao';
   let maxScore = 0;
-  
+
   for (const [tipo, palavras] of Object.entries(keywords)) {
     const score = palavras.filter(p => textoLower.includes(p)).length;
     if (score > maxScore) {
@@ -62,7 +73,7 @@ function classificarComIZA(texto: string): ClassificacaoIA {
   // Calcular órgão
   let orgaoDetectado: OrgaoGDF = 'Outro';
   let maxOrgaoScore = 0;
-  
+
   for (const [orgao, palavras] of Object.entries(orgaoKeywords)) {
     const score = palavras.filter((p: string) => textoLower.includes(p)).length;
     if (score > maxOrgaoScore) {
@@ -83,192 +94,339 @@ function classificarComIZA(texto: string): ClassificacaoIA {
     tipoSugerido: tipoDetectado,
     orgaoSugerido: orgaoDetectado,
     confianca,
-    justificativa: `Identifiquei características de uma **${tipoDetectado.toUpperCase()}** relacionada ao órgão **${orgaoDetectado}**.`,
+    justificativa: `Identifiquei características de ${TIPO_LABEL[tipoDetectado].nome.toLowerCase()} relacionada ao órgão ${orgaoDetectado}.`,
     palavrasChave: palavrasEncontradas.slice(0, 5)
   };
 }
 
-export default function IzaAssistente({ onClassificacao, conteudo, className }: IzaAssistenteProps) {
-  const [mensagens, setMensagens] = useState<Array<{ tipo: 'user' | 'iza'; texto: string }>>([
-    { 
-      tipo: 'iza', 
-      texto: 'Olá! Sou a IZA. Posso ajudar a classificar sua manifestação automaticamente ou tirar dúvidas.' 
-    }
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+export default function IzaAssistente({
+  onClassificacao,
+  onRelatoChange,
+  conteudo = '',
+  className,
+  modo = 'completo'
+}: IzaAssistenteProps) {
+  const [relato, setRelato] = useState(conteudo);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [classificacao, setClassificacao] = useState<ClassificacaoIA | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showOrientacoes, setShowOrientacoes] = useState(false);
+  const [etapa, setEtapa] = useState<'relato' | 'resultado'>('relato');
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const MIN_CHARS = 20;
+  const MAX_CHARS = 13000;
 
   useEffect(() => {
-    scrollToBottom();
-  }, [mensagens]);
+    if (conteudo) {
+      setRelato(conteudo);
+    }
+  }, [conteudo]);
 
-  const handleEnviar = async () => {
-    if (!input.trim()) return;
+  const handleRelatoChange = (texto: string) => {
+    if (texto.length <= MAX_CHARS) {
+      setRelato(texto);
+      onRelatoChange?.(texto);
+    }
+  };
 
-    const userMessage = input.trim();
-    setMensagens(prev => [...prev, { tipo: 'user', texto: userMessage }]);
-    setInput('');
-    setIsLoading(true);
+  const analisarRelato = async () => {
+    if (relato.length < MIN_CHARS) return;
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsAnalyzing(true);
 
-    const resultado = classificarComIZA(userMessage);
+    // Simula delay de processamento da IA
+    await new Promise(resolve => setTimeout(resolve, 1800));
+
+    const resultado = classificarComIZA(relato);
     setClassificacao(resultado);
-
-    const resposta = `Com base no que você escreveu:\n\n` +
-      `📌 Tipo: **${resultado.tipoSugerido.toUpperCase()}**\n` +
-      `🏢 Órgão: **${resultado.orgaoSugerido}**\n\n` +
-      `${resultado.justificativa}`;
-
-    setMensagens(prev => [...prev, { tipo: 'iza', texto: resposta }]);
-    setIsLoading(false);
+    setEtapa('resultado');
+    setIsAnalyzing(false);
 
     if (onClassificacao) {
       onClassificacao(resultado);
     }
   };
 
-  const analisarConteudo = async () => {
-    if (!conteudo?.trim()) return;
-
-    setIsLoading(true);
-    setMensagens(prev => [...prev, { 
-      tipo: 'iza', 
-      texto: 'Analisando o texto da sua manifestação...' 
-    }]);
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const resultado = classificarComIZA(conteudo);
-    setClassificacao(resultado);
-
-    const resposta = `Prontinho! Analisei seu texto:\n\n` +
-      `📌 Sugiro registrar como **${resultado.tipoSugerido.toUpperCase()}**\n` +
-      `🏢 Para o órgão **${resultado.orgaoSugerido}**\n\n` +
-      `Já apliquei essas sugestões no formulário para você.`;
-
-    setMensagens(prev => [...prev, { tipo: 'iza', texto: resposta }]);
-    setIsLoading(false);
-
-    if (onClassificacao) {
-      onClassificacao(resultado);
-    }
+  const resetar = () => {
+    setClassificacao(null);
+    setEtapa('relato');
   };
+
+  const podeAnalisar = relato.length >= MIN_CHARS && !isAnalyzing;
+  const progresso = Math.min(100, (relato.length / MIN_CHARS) * 100);
+
+  if (modo === 'compacto') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`rounded-2xl border border-[var(--border-primary)] bg-gradient-to-br from-blue-50 to-indigo-50 p-4 ${className}`}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--brand-primary)] to-[var(--brand-primary-dark)] flex items-center justify-center shadow-lg">
+            <span className="text-2xl" role="img" aria-label="IZA">🤖</span>
+          </div>
+          <div className="flex-1">
+            <h4 className="font-bold text-[var(--text-primary)]">IZA - Assistente Virtual</h4>
+            <p className="text-sm text-[var(--text-secondary)]">
+              Posso ajudar a classificar sua manifestação automaticamente
+            </p>
+          </div>
+          <Sparkles className="w-5 h-5 text-yellow-500" />
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
-    <div className={`overflow-hidden rounded-3xl border border-[var(--border-primary)] bg-[var(--bg-elevated)] shadow-lg ${className}`}>
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[var(--brand-primary-dark)] to-[var(--brand-primary)] text-white px-6 py-4 flex items-center gap-4">
-        <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md shadow-inner">
-          <Bot className="w-7 h-7 text-white" />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={`overflow-hidden rounded-3xl border border-[var(--border-primary)] bg-[var(--bg-elevated)] shadow-xl ${className}`}
+    >
+      {/* Header com avatar da IZA */}
+      <div className="bg-gradient-to-r from-[var(--brand-primary-dark)] to-[var(--brand-primary)] text-white p-6">
+        <div className="flex items-start gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/10">
+            <span className="text-4xl" role="img" aria-label="IZA">🤖</span>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="font-bold text-xl">IZA</h3>
+              <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs font-medium">IA</span>
+            </div>
+            <p className="text-blue-100 text-sm leading-relaxed">
+              Olá! Sou a <strong>IZA</strong>, a inteligência artificial da Ouvidoria do GDF.
+              Vou te ajudar a registrar sua manifestação de forma rápida e eficiente.
+            </p>
+          </div>
+          <Sparkles className="w-6 h-6 text-yellow-300 animate-pulse flex-shrink-0" />
         </div>
-        <div>
-          <h3 className="font-bold text-lg leading-tight">IZA</h3>
-          <p className="text-xs text-blue-100 font-medium opacity-90">Inteligência Artificial do GDF</p>
-        </div>
-        <Sparkles className="w-6 h-6 ml-auto text-yellow-300 animate-pulse" />
       </div>
 
-      {/* Mensagens */}
-      <div className="h-80 overflow-y-auto p-6 space-y-6 bg-[var(--bg-secondary)]/50">
-        <AnimatePresence>
-            {mensagens.map((msg, index) => (
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                key={index}
-                className={`flex gap-4 ${msg.tipo === 'user' ? 'justify-end' : 'justify-start'}`}
+      <AnimatePresence mode="wait">
+        {etapa === 'relato' ? (
+          <motion.div
+            key="relato"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="p-6 space-y-4"
+          >
+            {/* Orientações colapsáveis */}
+            <button
+              onClick={() => setShowOrientacoes(!showOrientacoes)}
+              className="w-full flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-left"
             >
-                {msg.tipo === 'iza' && (
-                <div className="w-8 h-8 bg-[var(--brand-primary)] rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-md">
-                    <Bot className="w-5 h-5 text-white" />
-                </div>
-                )}
-                
-                <div
-                className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-sm text-sm leading-relaxed ${
-                    msg.tipo === 'user' 
-                    ? 'bg-[var(--brand-primary)] text-white rounded-br-sm' 
-                    : 'bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded-bl-sm border border-[var(--border-primary)]'
-                }`}
+              <div className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-600" />
+                <span className="font-medium text-blue-800">Orientações para o seu registro</span>
+              </div>
+              {showOrientacoes ? (
+                <ChevronUp className="w-5 h-5 text-blue-600" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-blue-600" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {showOrientacoes && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden"
                 >
-                <div className="whitespace-pre-wrap markdown-content">
-                    {msg.texto.split('\n').map((line, i) => (
-                        <p key={i} className={i > 0 ? "mt-2" : ""}>
-                            {line.split('**').map((part, j) => 
-                                j % 2 === 1 ? <strong key={j} className="font-bold">{part}</strong> : part
-                            )}
-                        </p>
-                    ))}
+                  <div className="p-4 bg-blue-50 rounded-xl text-sm text-blue-800 space-y-2">
+                    <p><strong>Dicas para um bom relato:</strong></p>
+                    <ul className="list-disc pl-5 space-y-1">
+                      <li>Descreva o fato de forma clara e objetiva</li>
+                      <li>Informe quando e onde ocorreu</li>
+                      <li>Mencione as pessoas ou setores envolvidos</li>
+                      <li>Evite informações pessoais sensíveis no texto</li>
+                      <li>Quanto mais detalhes, melhor a análise</li>
+                    </ul>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Área de texto */}
+            <div className="relative">
+              <label htmlFor="iza-relato" className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
+                <MessageSquare className="w-4 h-4 inline mr-2" />
+                Descreva sua manifestação
+              </label>
+              <textarea
+                id="iza-relato"
+                value={relato}
+                onChange={(e) => handleRelatoChange(e.target.value)}
+                placeholder="Escreva aqui o que você deseja relatar. Seja o mais detalhado possível para que eu possa identificar corretamente o tipo de manifestação e o órgão responsável..."
+                className="w-full min-h-[200px] p-4 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[var(--text-primary)] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-all placeholder:text-[var(--text-tertiary)] resize-none"
+                disabled={isAnalyzing}
+              />
+
+              {/* Contador e barra de progresso */}
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-2">
+                  {relato.length < MIN_CHARS && (
+                    <span className="text-xs text-amber-600">
+                      Mínimo de {MIN_CHARS} caracteres
+                    </span>
+                  )}
+                  {relato.length >= MIN_CHARS && (
+                    <span className="text-xs text-green-600 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Pronto para análise
+                    </span>
+                  )}
                 </div>
+                <span className={`text-xs ${relato.length > MAX_CHARS * 0.9 ? 'text-amber-600' : 'text-[var(--text-tertiary)]'}`}>
+                  {relato.length.toLocaleString()}/{MAX_CHARS.toLocaleString()}
+                </span>
+              </div>
+
+              {/* Barra de progresso mínimo */}
+              {relato.length < MIN_CHARS && relato.length > 0 && (
+                <div className="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-amber-400 to-amber-500"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progresso}%` }}
+                  />
                 </div>
-                
-                {msg.tipo === 'user' && (
-                <div className="w-8 h-8 bg-[var(--text-secondary)] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <User className="w-5 h-5 text-white" />
-                </div>
+              )}
+            </div>
+
+            {/* Botão de análise */}
+            <motion.button
+              onClick={analisarRelato}
+              disabled={!podeAnalisar}
+              className={`
+                w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-white
+                transition-all duration-300 shadow-lg
+                ${podeAnalisar
+                  ? 'bg-gradient-to-r from-[var(--brand-primary)] to-[var(--brand-primary-dark)] hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]'
+                  : 'bg-gray-300 cursor-not-allowed'}
+              `}
+              whileTap={{ scale: podeAnalisar ? 0.98 : 1 }}
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Analisando com IA...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Analisar com IZA
+                </>
+              )}
+            </motion.button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="resultado"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="p-6 space-y-4"
+          >
+            {/* Resultado da classificação */}
+            <div className="text-center mb-4">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', delay: 0.2 }}
+                className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 flex items-center justify-center"
+              >
+                <CheckCircle2 className="w-8 h-8 text-green-600" />
+              </motion.div>
+              <h4 className="font-bold text-lg text-[var(--text-primary)]">Análise concluída!</h4>
+              <p className="text-sm text-[var(--text-secondary)]">
+                Identifiquei o tipo e órgão sugeridos para sua manifestação
+              </p>
+            </div>
+
+            {classificacao && (
+              <div className="space-y-3">
+                {/* Tipo identificado */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className={`p-4 bg-gradient-to-r ${TIPO_LABEL[classificacao.tipoSugerido].cor} rounded-2xl text-white shadow-lg`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{TIPO_LABEL[classificacao.tipoSugerido].emoji}</span>
+                    <div>
+                      <p className="text-xs opacity-80 uppercase tracking-wide">Tipo identificado</p>
+                      <p className="font-bold text-xl">{TIPO_LABEL[classificacao.tipoSugerido].nome}</p>
+                    </div>
+                    <div className="ml-auto text-right">
+                      <p className="text-xs opacity-80">Confiança</p>
+                      <p className="font-bold">{Math.round(classificacao.confianca * 100)}%</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Órgão sugerido */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="p-4 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-primary)]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <span className="text-xl">🏛️</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">Órgão responsável</p>
+                      <p className="font-bold text-[var(--text-primary)]">{classificacao.orgaoSugerido}</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Palavras-chave */}
+                {classificacao.palavrasChave.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="p-4 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-primary)]"
+                  >
+                    <p className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide mb-2">Palavras-chave identificadas</p>
+                    <div className="flex flex-wrap gap-2">
+                      {classificacao.palavrasChave.map((palavra, i) => (
+                        <span key={i} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                          {palavra}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
                 )}
-            </motion.div>
-            ))}
-        </AnimatePresence>
-        
-        {isLoading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-4 justify-start">
-            <div className="w-8 h-8 bg-[var(--brand-primary)] rounded-full flex items-center justify-center shadow-md">
-              <Bot className="w-5 h-5 text-white" />
-            </div>
-            <div className="bg-[var(--bg-elevated)] rounded-2xl rounded-bl-sm px-5 py-3 shadow-sm border border-[var(--border-primary)] flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-[var(--brand-primary)]" />
-              <span className="text-xs text-[var(--text-secondary)] font-medium">Digitando...</span>
-            </div>
+
+                {/* Info */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-center text-sm text-[var(--text-secondary)] bg-green-50 p-3 rounded-xl"
+                >
+                  ✅ As sugestões foram aplicadas automaticamente ao formulário
+                </motion.p>
+
+                {/* Botão para editar */}
+                <button
+                  onClick={resetar}
+                  className="w-full py-3 text-[var(--brand-primary)] hover:bg-blue-50 rounded-xl transition-colors font-medium"
+                >
+                  Editar relato
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Botão de análise automática */}
-      {conteudo && !classificacao && (
-        <div className="px-6 py-2 bg-[var(--bg-secondary)]/50">
-          <button
-            onClick={analisarConteudo}
-            disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-[0.98] text-white rounded-xl transition-all shadow-md shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm"
-          >
-            <Sparkles className="w-4 h-4" />
-            Analisar manifestação automaticamente
-          </button>
-        </div>
-      )}
-
-      {/* Input */}
-      <div className="p-4 bg-[var(--bg-elevated)] border-t border-[var(--border-primary)]">
-        <div className="flex gap-2 relative">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleEnviar()}
-            placeholder="Converse com a Iza..."
-            className="flex-1 pl-5 pr-12 py-3 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[var(--text-primary)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-all placeholder:text-[var(--text-tertiary)]"
-            disabled={isLoading}
-          />
-          <button
-            onClick={handleEnviar}
-            disabled={!input.trim() || isLoading}
-            className="absolute right-2 top-1.5 p-2 bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-dark)] text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:scale-105 active:scale-95"
-            aria-label="Enviar mensagem"
-          >
-            <Send className="w-4 h-4 translate-x-px translate-y-px" />
-          </button>
-        </div>
-      </div>
-    </div>
+      </AnimatePresence>
+    </motion.div>
   );
 }
