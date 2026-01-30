@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toast, InstallPrompt } from "@/components";
+import { Toast, InstallPrompt, OfflineIndicator } from "@/components";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -85,6 +85,7 @@ export default function RootLayout({
 
         <Toast />
         <InstallPrompt />
+        <OfflineIndicator />
       </body>
     </html>
   );

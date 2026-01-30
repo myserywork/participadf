@@ -25,7 +25,8 @@ import {
   Check,
   ShieldCheck
 } from 'lucide-react';
-import { Header, Footer } from '@/components';
+import { Header, Footer, useInstallPrompt } from '@/components';
+import { Download } from 'lucide-react';
 
 // Variants de animação e dados
 const TIPOS_MANIFESTACAO = [
@@ -122,6 +123,7 @@ const STATS = [
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
+  const { isInstallable, promptInstall } = useInstallPrompt();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
   
@@ -216,7 +218,7 @@ export default function Home() {
                   <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" />
                 </Link>
                 
-                <Link 
+                <Link
                   href="/consulta"
                   className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-[var(--text-primary)] font-bold text-lg rounded-2xl border border-[var(--border-primary)] shadow-sm hover:bg-gray-50 hover:-translate-y-1 transition-all duration-300"
                 >
@@ -224,6 +226,24 @@ export default function Home() {
                   Consultar Protocolo
                 </Link>
               </motion.div>
+
+              {/* Botão Instalar PWA */}
+              {isInstallable && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="mt-4"
+                >
+                  <button
+                    onClick={promptInstall}
+                    className="inline-flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg shadow-green-500/25 hover:shadow-green-500/40 hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <Download className="w-5 h-5" />
+                    Instalar App no Celular
+                  </button>
+                </motion.div>
+              )}
 
               {/* Stats */}
               <motion.div 

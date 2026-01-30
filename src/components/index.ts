@@ -9,3 +9,4 @@ export { default as AnexosList } from './AnexosList';
 export { default as IzaAssistente } from './IzaAssistente';
 export { default as ProtocoloSucesso } from './ProtocoloSucesso';
 export { default as InstallPrompt, useInstallPrompt } from './InstallPrompt';
+export { default as OfflineIndicator, useOnlineStatus } from './OfflineIndicator';
